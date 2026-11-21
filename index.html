@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sagun Mishra | Art Gallery</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0b10;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:55px 15px;background:linear-gradient(135deg,#352044,#11111c)}
+header h1{font-size:38px;letter-spacing:4px;margin:12px}
+header p{color:#d4b9ee}
+nav{text-align:center;padding:18px;background:#171721;position:sticky;top:0}
+nav a{color:white;text-decoration:none;margin:12px}
+section{padding:35px 18px;max-width:1100px;margin:auto}
+h2{text-align:center;color:#d5adff;font-size:28px}
+.about{text-align:center;color:#bbb;line-height:1.8}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.art{background:#191923;border-radius:14px;overflow:hidden;position:relative}
+.art img{width:100%;height:220px;object-fit:cover;display:block;cursor:pointer}
+.art p{text-align:center;margin:12px}
+.like-area{display:flex;justify-content:center;align-items:center;gap:12px;padding:0 10px 15px}
+.like{background:#292333;color:white;border:0;border-radius:25px;padding:9px 18px;cursor:pointer;font-size:17px}
+.like.liked{background:#52243c;color:#ff6b9c}
+.count{color:#bbb;font-size:13px}
+.heart{position:absolute;top:35%;left:50%;transform:translate(-50%,-50%) scale(0);font-size:75px;pointer-events:none}
+.heart.show{animation:pop .7s ease}
+@keyframes pop{0%{transform:translate(-50%,-50%) scale(0)}40%{transform:translate(-50%,-50%) scale(1.4)}100%{transform:translate(-50%,-50%) scale(0)}}
+footer{text-align:center;padding:25px;color:#999}
+@media(min-width:700px){.gallery{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<header>
+<p>WELCOME TO MY CREATIVE WORLD</p>
+<h1>SAGUN MISHRA</h1>
+<p>ARTIST • CREATOR • DREAMER</p>
+</header>
+
+<nav>
+<a href="#home">Home</a>
+<a href="#gallery">Gallery</a>
+<a href="#about">About</a>
+</nav>
+
+<section id="home">
+<h2>My Creative World ✨</h2>
+<p class="about">
+Welcome to my personal art gallery.
+Explore my artwork, creativity and imagination.
+Every artwork has its own story.
+</p>
+</section>
+
+<section id="gallery">
+<h2>My Artwork ❤️</h2>
+<p class="about">Double tap any artwork to like it!</p>
+
+<div class="gallery" id="galleryBox"></div>
+</section>
+
+<section id="about">
+<h2>About Me</h2>
+<p class="about">
+I'm Sagun Mishra.
+This is my personal creative space where I share
+my artwork and imagination with the world.
+</p>
+</section>
+
+<footer>
+© 2026 Sagun Mishra. All Rights Reserved.
+</footer>
+
+<script>
+const artworks = [
+["art1.jpg","Artwork 01"],
+["art2.jpg","Artwork 02"],
+["art3.jpg","Artwork 03"],
+["art4.jpg","Artwork 04"],
+["art5.jpg","Artwork 05"],
+["art6.jpg","Artwork 06"],
+["art7.jpg","Artwork 07"],
+["art8.jpg","Artwork 08"],
+["art9.jpg","Artwork 09"],
+["art10.jpg","Artwork 10"]
+];
+
+const gallery = document.getElementById("galleryBox");
+
+artworks.forEach((art,index)=>{
+  const card=document.createElement("div");
+  card.className="art";
+
+  card.innerHTML=`
+    <div style="position:relative">
+      <img src="${art[0]}" alt="${art[1]}">
+      <div class="heart">❤️</div>
+    </div>
+    <p>${art[1]}</p>
+    <div class="like-area">
+      <button class="like">♡ Like</button>
+      <span class="count">0 likes</span>
+    </div>
+  `;
+
+  gallery.appendChild(card);
+
+  const btn=card.querySelector(".like");
+  const img=card.querySelector("img");
+  const heart=card.querySelector(".heart");
+  const count=card.querySelector(".count");
+
+  const key="sagun-art-like-"+index;
+  let liked=localStorage.getItem(key)==="yes";
+
+  function update(){
+    btn.classList.toggle("liked",liked);
+    btn.textContent=liked?"♥ Liked":"♡ Like";
+    count.textContent=liked?"1 like":"0 likes";
+  }
+
+  function toggleLike(){
+    liked=!liked;
+    localStorage.setItem(key,liked?"yes":"no");
+    update();
+  }
+
+  btn.addEventListener("click",toggleLike);
+
+  let lastTap=0;
+  img.addEventListener("touchend",()=>{
+    const now=Date.now();
+    if(now-lastTap<350){
+      toggleLike();
+      heart.classList.remove("show");
+      void heart.offsetWidth;
+      heart.classList.add("show");
+    }
+    lastTap=now;
+  });
+
+  img.addEventListener("dblclick",()=>{
+    toggleLike();
+    heart.classList.remove("show");
+    void heart.offsetWidth;
+    heart.classList.add("show");
+  });
+
+  update();
+});
+</script>
+
+</body>
+</html>
